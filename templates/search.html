@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% endblock %}
+
+{% block main %}
+    {% for row in results %}
+    <div class="item">
+        <h2 class="eng">{{ row[0] }}</h2>
+        <p class="dai">{{ row[1] }}</p>
+    </div>
+    {% endfor %}
+{% endblock %}

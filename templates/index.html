@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Eng-Dai{% endblock %}
+
+{% block main %}    
+<h1 style="text-align: center;">English to Dai</h1>
+<input type="text" name="q" autofocus autocomplete=off placeholder="Search">
+<div class="list">
+    {% for row in data %}
+    <div class="item">
+        <h2 class="eng">{{ row[0] }}</h2>
+        <p class="dai">{{ row[1] }}</p>
+    </div>
+    {% endfor %}
+</div>
+<script>
+    let input = document.querySelector("input");
+    input.addEventListener('input', async function() {
+        let response = await fetch('/search?q=' + input.value);
+        let results = await response.text();
+        
+        document.querySelector('.list').innerHTML = results;
+        document.querySelector('.list').scrollTo = 0;
+    });
+</script>
+<p id="credits">made by <a href="https://github.com/h1k4ru-f14m3" target="_blank">h1k4ru-f14m3</a></p>
+
+
+{% endblock %}
