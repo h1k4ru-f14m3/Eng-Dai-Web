@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block main %}
+<h1 style="text-align: center;">English to Dai</h1>
+<form action="/update" method="post">
+    <button type="submit">Submit</button>
+    <div class="list">
+    {% for row in data %}
+        <div class="admin item">
+            <button class="admininput eng" name="id" data-id="{{ row[0] }}" data-eng="{{ row[1] }}" data-dai="{{ row[2] }}" type="button">{{ row[1] }}</button>
+            <p class="dai">{{ row[2] }}</p>
+        </div>
+    {% endfor %}
+    </div>
+</form>
+<div class="modal">
+    <div class="popup">
+        <h1>Edit Panel</h1>
+
+        <label for="id">Word-ID:</label>
+        <input class="id-input" disabled name="id">
+
+        <label for="eng">English:</label>
+        <input class="eng-input" name="eng">
+
+        <label for="dai">Dai:</label>
+        <input class="dai-input" name="dai">
+
+        <div class="buttons">
+            <button class="submit">Submit</button>
+            <button class="cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+<script>
+    let buttons = document.querySelectorAll('.admininput');
+    let modal = document.querySelector('.modal');
+    let cancel = document.querySelector('.buttons .cancel');
+
+    buttons.forEach(button => {
+        button.addEventListener("click", function() {
+            modal.style.visibility = 'visible';
+            let wordid = this.dataset.id;
+            let eng = this.dataset.eng;
+            let dai = this.dataset.dai;
+
+            document.querySelector('.id-input').value = wordid;
+            document.querySelector('.eng-input').value = eng;
+            document.querySelector('.dai-input').value = dai;
+            
+            console.log(wordid);
+            console.log('okay!');
+        });
+    });
+
+    cancel.addEventListener("click", function() {
+        modal.style.visibility = 'hidden';
+        console.log('close!')
+    });
+</script>
+{% endblock %}
