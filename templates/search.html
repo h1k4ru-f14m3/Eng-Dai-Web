@@ -3,10 +3,20 @@
 {% block title %}Search{% endblock %}
 
 {% block main %}
-    {% for row in results %}
-    <div class="item">
-        <h2 class="eng">{{ row[1] }}</h2>
-        <p class="dai">{{ row[2] }}</p>
-    </div>
-    {% endfor %}
+    {% if mode == 'normal' %}
+        {% for row in results %}
+        <div class="item">
+            <h2 class="eng">{{ row[1] }}</h2>
+            <p class="dai">{{ row[2] }}</p>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% if mode == 'admin' %}
+        {% for row in results %}
+        <div class="item">
+            <a class="admininput eng" data-id="{{ row [0] }}" data-eng="{{ row[1] }}" data-dai="{{ row[2] }}">{{ row[1] }}</a>
+            <p class="dai">{{ row[2] }}</p>
+        </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

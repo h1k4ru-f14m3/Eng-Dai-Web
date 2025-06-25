@@ -27,23 +27,20 @@ def update():
         for i in get_all('eng'):
             print(f"{i[0]} = {i[1]}")
         return redirect("/")
-    
-@app.route("/dosomething")
-def dosomething():
-    return render_template("admin.html", data=get_all('eng'))
 
 @app.route("/search")
 def search():
     db = sqlite3.connect(db_file)
     db_cur = db.cursor()
     q = request.args.get("q")
+    mode = request.args.get("m")
 
     if q == "":    
         db_cur.execute("SELECT id, eng, dai FROM data ORDER BY eng ASC")
         datalist = db_cur.fetchall()
-        return render_template("search.html", results=datalist)
+        return render_template("search.html", results=datalist, mode=mode)
 
     db_cur.execute("SELECT id, eng, dai FROM data WHERE eng LIKE ? ORDER BY eng ASC", [q + "%"])
     datalist = db_cur.fetchall()
-    return render_template("search.html", results=datalist)
+    return render_template("search.html", results=datalist, mode=mode)
 
