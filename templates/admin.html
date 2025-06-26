@@ -44,4 +44,35 @@
         </div>
     </div>
 </div>
+
+<script type="module">
+    import { search } from "{{ url_for('static', filename='functions.js') }}";
+    
+    let admin_input = document.querySelector("#admin_search");
+    search(admin_input,'admin','#admin_list', function() {
+        let buttons = document.querySelectorAll('.admininput');
+        let modal = document.querySelector('.modal');
+        let cancel = document.querySelector('.buttons #cancel');
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function() {
+                modal.style.visibility = 'visible';
+                let wordid = this.dataset.id;
+                let eng = this.dataset.eng;
+                let dai = this.dataset.dai;
+
+                document.querySelector('.id-input').value = wordid;
+                document.querySelector('.eng-input').value = eng;
+                document.querySelector('.dai-input').value = dai;
+                
+                console.log(wordid);
+            });
+        });
+
+        cancel.addEventListener("click", function() {
+            modal.style.visibility = 'hidden';
+            console.log('close!');
+        });
+    });
+</script>
 {% endblock %}
