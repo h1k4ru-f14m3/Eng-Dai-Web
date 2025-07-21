@@ -16,4 +16,12 @@
 <!-- <p id="credits">made by <a href="https://github.com/h1k4ru-f14m3" target="_blank">h1k4ru-f14m3</a></p> -->
 <p id="credits"><a href="/admin">Admin</a></p>
 
+<script type="module">
+    import { search } from "{{ url_for('static', filename='functions.js') }}";
+    
+    // For index.html
+    let index_input = document.querySelector("#index_search");
+    search(index_input,'normal','#index_list');
+</script>
+
 {% endblock %}

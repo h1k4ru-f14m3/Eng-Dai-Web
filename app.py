@@ -24,9 +24,19 @@ def admin_panel():
 @app.route("/update", methods=["GET", "POST"])
 def update():
     if request.method == "POST":
-        for i in get_all('eng'):
-            print(f"{i[0]} = {i[1]}")
-        return redirect("/")
+        word_id = request.form.get('word_id')
+        eng = request.form.get('eng')
+        dai = request.form.get('dai')
+
+        db = sqlite3.connect(db_file)
+        db_cur = db.cursor()
+
+        print(f'{word_id}: {eng} = {dai}')
+        db_cur.execute('UPDATE data SET eng = ?, dai = ? WHERE id = ?', [eng, dai, word_id])
+        db.commit()
+        db_cur.close()
+
+        return redirect("/admin")
 
 @app.route("/search")
 def search():

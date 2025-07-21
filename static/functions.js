@@ -10,8 +10,28 @@ export function search(input,mode,output,external_function) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // For index.html
-    let index_input = document.querySelector("#index_search");
-    search(index_input,'normal','#index_list');
-});
+export function addListeners() {
+    let buttons = document.querySelectorAll('.admininput');
+    let modal = document.querySelector('.modal');
+    let cancel = document.querySelector('.buttons #cancel');
+
+    buttons.forEach(button => {
+        button.addEventListener("click", function() {
+            modal.style.visibility = 'visible';
+            let wordid = this.dataset.id;
+            let eng = this.dataset.eng;
+            let dai = this.dataset.dai;
+
+            document.querySelector('.id-input').value = wordid;
+            document.querySelector('.eng-input').value = eng;
+            document.querySelector('.dai-input').value = dai;
+                
+            console.log(wordid);
+        });
+    });
+
+    cancel.addEventListener("click", function() {
+        modal.style.visibility = 'hidden';
+        console.log('close!');
+    });
+}

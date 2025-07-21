@@ -26,11 +26,11 @@
 </div>
 
 <div class="modal">
-    <div class="popup">
+    <form class="popup" action="/update" method="post">
         <h1>Edit Panel</h1>
 
-        <label for="id">Word-ID:</label>
-        <input class="id-input" disabled name="id">
+        <label for="word_id">Word-ID:</label>
+        <input class="id-input" readonly name="word_id">
 
         <label for="eng">English:</label>
         <input class="eng-input" name="eng">
@@ -39,40 +39,19 @@
         <input class="dai-input" name="dai">
 
         <div class="buttons">
-            <button class="button" id="submit">Submit</button>
-            <button class="button" id="cancel">Cancel</button>
+            <button class="button" id="submit" type="submit">Submit</button>
+            <button class="button" id="cancel" type="button">Cancel</button>
         </div>
-    </div>
+    </form>
 </div>
 
 <script type="module">
-    import { search } from "{{ url_for('static', filename='functions.js') }}";
-    
+    import { search,addListeners } from "{{ url_for('static', filename='functions.js') }}";
+
     let admin_input = document.querySelector("#admin_search");
+    addListeners();
     search(admin_input,'admin','#admin_list', function() {
-        let buttons = document.querySelectorAll('.admininput');
-        let modal = document.querySelector('.modal');
-        let cancel = document.querySelector('.buttons #cancel');
-
-        buttons.forEach(button => {
-            button.addEventListener("click", function() {
-                modal.style.visibility = 'visible';
-                let wordid = this.dataset.id;
-                let eng = this.dataset.eng;
-                let dai = this.dataset.dai;
-
-                document.querySelector('.id-input').value = wordid;
-                document.querySelector('.eng-input').value = eng;
-                document.querySelector('.dai-input').value = dai;
-                
-                console.log(wordid);
-            });
-        });
-
-        cancel.addEventListener("click", function() {
-            modal.style.visibility = 'hidden';
-            console.log('close!');
-        });
+        addListeners();
     });
 </script>
 {% endblock %}
