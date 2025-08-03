@@ -1,7 +1,7 @@
 # English to Dai Dictionary (Web)
 This project is a dictionary app to check words from English in Dai. It is currently a web app and there is no official site yet. It can be run locally to use it, though I am planning to package this into an application later.
 
-## Installation
+## <ins>Installation</ins>
 ### Pre-requisites
 - [Python](https://www.python.org/downloads/)
 
@@ -11,7 +11,7 @@ This project is a dictionary app to check words from English in Dai. It is curre
 ```bash
 git clone https://github.com/h1k4ru-f14m3/Eng-Dai-Web.git && cd Eng-Dai-Web
 ```
-**OR**
+***OR***
 - Download the source code via the green "Code" button above.
 - Then, extract the zip.
 
