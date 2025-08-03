@@ -5,8 +5,18 @@ This project is a dictionary app to check words from English in Dai. It is curre
 There are mainly 2 ways to install this on your local machine.
 
 ### Installation via Docker (Recommended)
-This is the most recommended way to install this web app on your local machine as Docker will maintain all the environment variables that were used in development. In simple terms, if it works on my machine, it will easily work on yours.
+Docker is the preferred method for running this web app locally, as it ensures a consistent environment between development and deployment.
 
 - Install [Docker](https://docs.docker.com/get-started/get-docker/)
-- Open your terminal and run:
-- 
+- Open your terminal and run the following to download the image/package:
+```bash
+docker pull h1k4ruf14m3/eng-dai-dictionary
+```
+- Then, run the following to run the program and go to the given website to use this web app:
+```bash
+docker run h1k4ruf14m3/eng-dai-dictionary
+```
+
+*Note: Changes to the database in the Docker container may not be saved after it stops.*
+
+### Installation via source code
