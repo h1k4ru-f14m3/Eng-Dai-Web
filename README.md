@@ -17,6 +17,9 @@ git clone https://github.com/h1k4ru-f14m3/Eng-Dai-Web.git && cd Eng-Dai-Web
 
 ### 2. Download and Install the requirements.
 - Open your terminal and get into the folder via `cd`
+```bash
+cd Eng-Dai-Web
+```
 - Run the following to install all the libraries used by the web app.
 ```bash
 pip install -r requirements.txt
