@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block main %}
+<form action="/register" method="post">
+    <p>{{ message }}</p>
+    <label for="email">Email:</label>
+    <input type="text" placeholder="Email" name="email" required>
+
+    <label for="username">Username:</label> 
+    <input type="text" placeholder="Username" name="username" required>
+
+    <label for="password">Password:</label>
+    <input type="password" placeholder="Password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+
+    <label for="conpassword">Confirm Password:</label>
+    <input type="password" placeholder="Confirm Password" name="conpassword" required> 
+
+    <input type="submit" placeholder="Register">
+</form>
+{% endblock %}

@@ -3,6 +3,7 @@
 {% block title %}Admin{% endblock %}
 
 {% block main %}
+{% if role == "admin" %}
 <h1 style="text-align: center;">English to Dai</h1>
 
 <form action="/update" method="post">
@@ -45,6 +46,10 @@
     </form>
 </div>
 
+<div id="sign-in-up">
+    <a href="/logout">Logout</a>
+</div>
+
 <script type="module">
     import { search,addListeners } from "{{ url_for('static', filename='functions.js') }}";
 
@@ -54,4 +59,7 @@
         addListeners();
     });
 </script>
+{% else %}
+You are not allowed here!
+{% endif %}
 {% endblock %}

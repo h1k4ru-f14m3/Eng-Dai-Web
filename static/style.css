@@ -184,15 +184,15 @@ body {
     color: gray;
 }
 
-#credits {
+#credits, #sign-in-up {
     font-family: 'Courier New', Courier, monospace;
     font-size: 1em;
 }
 
-#credits a {
+#credits a, #sign-in-up a {
     color: black;
 }
 
-#credits a:hover {
+#credits a:hover, #sign-in-up a:hover {
     color: gray;
 }

@@ -13,8 +13,16 @@
     </div>
     {% endfor %}
 </div>
-<!-- <p id="credits">made by <a href="https://github.com/h1k4ru-f14m3" target="_blank">h1k4ru-f14m3</a></p> -->
-<p id="credits"><a href="/admin">Admin</a></p>
+<p id="credits">made by <a href="https://github.com/h1k4ru-f14m3" target="_blank">h1k4ru-f14m3</a></p>
+
+<div id="sign-in-up">
+    {% if name %}
+    <a href="/logout">Logout</a>
+    {% else %}
+    <a href="/register">Register</a>
+    <a href="/login">Login</a>
+    {% endif %}
+</div>
 
 <script type="module">
     import { search } from "{{ url_for('static', filename='functions.js') }}";
