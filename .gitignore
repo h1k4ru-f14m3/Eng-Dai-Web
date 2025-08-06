@@ -1,0 +1,7 @@
+__pycache__/
+compose.yaml
+Dockerfile
+README.Docker.md
+"data copy.db"
+.dockerignore
+accounts.db
