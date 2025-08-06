@@ -1,22 +1,31 @@
 # English to Dai Dictionary (Web)
-This project is a dictionary app to check words from English in Dai. It is currently a web app and there is no official site yet. It can be run locally to use it, though I am planning to package this into an application later.
+This project is a dictionary app to check words from English in Dai. It is currently a local web app as there is no official public site yet. I do plan on packaging this into an application later.
 
-## Installation
-There are mainly 2 ways to install this on your local machine.
+## <ins>Installation</ins>
+### Pre-requisites
+- [Python](https://www.python.org/downloads/)
 
-### Installation via Docker (Recommended)
-Docker is the preferred method for running this web app locally, as it ensures a consistent environment between development and deployment.
-
-- Install [Docker](https://docs.docker.com/get-started/get-docker/)
-- Open your terminal and run the following to download the image/package:
+### 1. Clone this repository
+- Install git if you have not.
+- Clone and get into the repository via the following command:
 ```bash
-docker pull h1k4ruf14m3/eng-dai-dictionary
+git clone https://github.com/h1k4ru-f14m3/Eng-Dai-Web.git && cd Eng-Dai-Web
 ```
-- Then, run the following to run the program and go to the given website to use this web app:
+***OR***
+- Download the source code via the green "Code" button above.
+- Then, extract the zip.
+
+### 2. Download and Install the requirements.
+- Open your terminal and get into the folder via `cd`
 ```bash
-docker run h1k4ruf14m3/eng-dai-dictionary
+cd Eng-Dai-Web
+```
+- Run the following to install all the libraries used by the web app.
+```bash
+pip install -r requirements.txt
 ```
 
-*Note: Changes to the database in the Docker container may not be saved after it stops.*
-
-### Installation via source code
+### 3. Run the app
+```bash
+flask run
+```
