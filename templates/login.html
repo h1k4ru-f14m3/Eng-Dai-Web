@@ -3,12 +3,18 @@
 {% block title %}Login{% endblock %}
 
 {% block main %}
-<form action="/login" method="post">
+<div class="header"></div>
+<form action="/login" method="post" class="login-container">
+    <h1>Login</h1>
+    
+    {% if message %}
     <p>{{ message }}</p>
+    {% endif %}
+    
     <label for="username">Username:</label> 
     <input type="text" placeholder="Username" name="username" required>
     <label for="password">Password:</label>
     <input type="password" placeholder="Password" name="password" required> 
-    <input type="submit" placeholder="Login">
+    <input type="submit" value="Login">
 </form>
 {% endblock %}

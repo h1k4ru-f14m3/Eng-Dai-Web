@@ -3,10 +3,16 @@
 {% block title %}Register{% endblock %}
 
 {% block main %}
-<form action="/register" method="post">
+<div class="header"></div>
+<form action="/register" method="post" class="login-container">
+    <h1>Register</h1>
+
+    {% if message %}
     <p>{{ message }}</p>
+    {% endif %}
+
     <label for="email">Email:</label>
-    <input type="text" placeholder="Email" name="email" required>
+    <input type="text" placeholder="Email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
 
     <label for="username">Username:</label> 
     <input type="text" placeholder="Username" name="username" required>
@@ -17,6 +23,6 @@
     <label for="conpassword">Confirm Password:</label>
     <input type="password" placeholder="Confirm Password" name="conpassword" required> 
 
-    <input type="submit" placeholder="Register">
+    <input type="submit" value="Register">
 </form>
 {% endblock %}

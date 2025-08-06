@@ -4,7 +4,11 @@
 
 {% block main %}    
 <h1 style="text-align: center;">English to Dai</h1>
-<input type="text" name="q" autofocus autocomplete=off placeholder="Search" class="searchbar" id="index_search">
+
+<div class="navBar">
+    <input type="text" name="q" autofocus autocomplete=off placeholder="Search" class="searchbar" id="index_search">
+</div>
+
 <div class="list" id="index_list">
     {% for row in data %}
     <div class="item">
