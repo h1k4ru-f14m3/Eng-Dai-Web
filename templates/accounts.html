@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Accounts{% endblock %}
+
+{% block main %}
+{% if role != "admin" %}
+You are not allowed here!
+{% else %}
+
+<h1 style="text-align: center;">Accounts</h1>
+
+<div class="navBar">
+    <input type="text" name="q" autofocus autocomplete=off placeholder="Search" class="searchbar" id="index_search">
+</div>
+
+<div class="list" id="index_list">
+    {% for row in results %}
+        <div class="item">
+            <h1><a data-email="{{ row[2] }}">{{ row[1] }}</a></h1>
+            
+            <form method="post" action="/setrole">
+            <input hidden name="user_id" value="{{ row[0] }}">
+            {% if row[3] == 'user' %}
+                <button type="submit" name="new_role" value="admin">Set to Admin</button>
+            {% else %}
+                <button type="submit" name="new_role" value="user">Set to User</button>
+            {% endif %}
+            </form>
+        </div>
+    {% endfor %}
+</div>
+
+<div id="footer_bar">
+    <a href="/logout">Logout</a>
+    <a href="/">Back</a>
+</div>
+
+<script type="module">
+    import { search } from "{{ url_for('static', filename='functions.js') }}";
+    
+    // For index.html
+    let index_input = document.querySelector("#index_search");
+    search(index_input,'accounts','#index_list');
+</script>
+
+{% endif %}
+{% endblock %}

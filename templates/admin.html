@@ -15,7 +15,7 @@
     <div class="admin list" id="admin_list">
     {% for row in data %}
         <div class="item">
-            <a class="admininput eng" data-id="{{ row [0] }}" data-eng="{{ row[1] }}" data-dai="{{ row[2] }}">{{ row[1] }}</a>
+            <h1><a class="input admininput" data-id="{{ row [0] }}" data-eng="{{ row[1] }}" data-dai="{{ row[2] }}">{{ row[1] }}</a></h1>
             <p class="dai">{{ row[2] }}</p>
         </div>
     {% endfor %}
@@ -46,7 +46,8 @@
     </form>
 </div>
 
-<div id="sign-in-up">
+<div id="footer_bar">
+    <a href="/accounts">Accounts</a>
     <a href="/logout">Logout</a>
 </div>
 

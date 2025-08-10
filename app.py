@@ -48,19 +48,43 @@ def update():
 
 @app.route("/search")
 def search():
-    db = sqlite3.connect(db_file)
-    db_cur = db.cursor()
     q = request.args.get("q")
     mode = request.args.get("m")
+    search_html = "search.html"
+
+    if mode == "accounts":
+        db = sqlite3.connect(db_accounts)
+        db_cur = db.cursor()
+
+        if q == "":
+            db_cur.execute("SELECT id, username, email, role FROM accounts ORDER BY id ASC")
+            return render_template(search_html, results=db_cur.fetchall())
+        
+        db_cur.execute("SELECT id, username, email, role FROM accounts WHERE username LIKE ? OR email LIKE ? ORDER BY id ASC", (q + "%", q + "%"))
+        return render_template(search_html, results=db_cur.fetchall())
+
+    db = sqlite3.connect(db_file)
+    db_cur = db.cursor()
 
     if q == "":    
         db_cur.execute("SELECT id, eng, dai FROM data ORDER BY eng ASC")
         datalist = db_cur.fetchall()
-        return render_template("search.html", results=datalist, mode=mode)
+        return render_template(search_html, results=datalist, mode=mode)
 
     db_cur.execute("SELECT id, eng, dai FROM data WHERE eng LIKE ? ORDER BY eng ASC", [q + "%"])
     datalist = db_cur.fetchall()
-    return render_template("search.html", results=datalist, mode=mode)
+    return render_template(search_html, results=datalist, mode=mode)
+
+
+@app.route("/accounts")
+def accounts():
+    db = sqlite3.connect(db_accounts)
+    db_cur = db.cursor()
+
+    db_cur.execute("SELECT id, username, email, role FROM accounts ORDER BY id ASC")    
+
+    return render_template("accounts.html", role=session.get("role"), results=db_cur.fetchall())
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

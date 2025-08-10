@@ -14,8 +14,24 @@
     {% if mode == 'admin' %}
         {% for row in results %}
         <div class="item">
-            <a class="admininput eng" data-id="{{ row [0] }}" data-eng="{{ row[1] }}" data-dai="{{ row[2] }}">{{ row[1] }}</a>
-            <p class="dai">{{ row[2] }}</p>
+            <h1><a class="input admininput" data-id="{{ row [0] }}" data-eng="{{ row[1] }}" data-dai="{{ row[2] }}">{{ row[1] }}</a></h1>
+            <p>{{ row[2] }}</p>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% if mode == 'account' %}
+        {% for row in results %}
+        <div class="item">
+            <h1><a data-email="{{ row[2] }}">{{ row[1] }}</a></h1>
+            
+            <form method="post" action="/setrole">
+            <input hidden name="user_id" value="{{ row[0] }}">
+            {% if row[3] == 'user' %}
+                <button type="submit" name="new_role" value="admin">Set to Admin</button>
+            {% else %}
+                <button type="submit" name="new_role" value="user">Set to User</button>
+            {% endif %}
+            </form>
         </div>
         {% endfor %}
     {% endif %}
