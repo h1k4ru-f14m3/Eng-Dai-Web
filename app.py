@@ -2,6 +2,8 @@ from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 import sqlite3
 import bcrypt
+from functions.global_vars import db_file, db_accounts
+from functions.search import get_all, database
 
 app = Flask(__name__)
 app.config["TEMPLATE_AUTO_RELOAD"] = True
@@ -9,25 +11,19 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-db_file = "data.db"
-db_accounts = "accounts.db"
-
-def get_all(order_by):
-    db = sqlite3.connect("data.db")
-    db_cur = db.cursor()
-    
-    db_cur.execute(f"SELECT id, eng, dai FROM data ORDER BY {order_by} ASC")
-    return db_cur.fetchall()
+words_db = database(db_file, "SELECT id, eng, dai FROM data")
+accounts_db = database(db_accounts, "SELECT id, username, email, role FROM accounts")
 
 @app.route("/")
 def index():
     if session.get("role") == "admin":
         return redirect("/admin")
-    return render_template("index.html", data=get_all("eng"), name=session.get("username"))
+    
+    return render_template("index.html", data=words_db.get_all("eng"), name=session.get("username"))
 
 @app.route("/admin")
 def admin_panel():
-    return render_template("admin.html", data=get_all("eng"), role=session.get("role"))
+    return render_template("admin.html", data=words_db.get_all("eng"), role=session.get("role"))
 
 @app.route("/update", methods=["GET", "POST"])
 def update():
@@ -46,6 +42,7 @@ def update():
 
         return redirect("/admin")
 
+
 @app.route("/search")
 def search():
     q = request.args.get("q")
@@ -53,37 +50,14 @@ def search():
     search_html = "search.html"
 
     if mode == "accounts":
-        db = sqlite3.connect(db_accounts)
-        db_cur = db.cursor()
+        return render_template(search_html, results=accounts_db.execute_query('username',q), mode=mode)
 
-        if q == "":
-            db_cur.execute("SELECT id, username, email, role FROM accounts ORDER BY id ASC")
-            return render_template(search_html, results=db_cur.fetchall())
-        
-        db_cur.execute("SELECT id, username, email, role FROM accounts WHERE username LIKE ? OR email LIKE ? ORDER BY id ASC", (q + "%", q + "%"))
-        return render_template(search_html, results=db_cur.fetchall())
-
-    db = sqlite3.connect(db_file)
-    db_cur = db.cursor()
-
-    if q == "":    
-        db_cur.execute("SELECT id, eng, dai FROM data ORDER BY eng ASC")
-        datalist = db_cur.fetchall()
-        return render_template(search_html, results=datalist, mode=mode)
-
-    db_cur.execute("SELECT id, eng, dai FROM data WHERE eng LIKE ? ORDER BY eng ASC", [q + "%"])
-    datalist = db_cur.fetchall()
-    return render_template(search_html, results=datalist, mode=mode)
+    return render_template(search_html, results=words_db.execute_query('eng',q), mode=mode)
 
 
 @app.route("/accounts")
 def accounts():
-    db = sqlite3.connect(db_accounts)
-    db_cur = db.cursor()
-
-    db_cur.execute("SELECT id, username, email, role FROM accounts ORDER BY id ASC")    
-
-    return render_template("accounts.html", role=session.get("role"), results=db_cur.fetchall())
+    return render_template("accounts.html", role=session.get("role"), results=accounts_db.get_all('username'))
 
 
 @app.route("/login", methods=["GET", "POST"])
