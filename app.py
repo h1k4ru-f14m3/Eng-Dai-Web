@@ -3,7 +3,8 @@ from flask_session import Session
 import sqlite3
 import bcrypt
 from functions.global_vars import db_file, db_accounts
-from functions.search import get_all, database
+from functions.search import database
+from functions.authentication import create_account, authenticate
 
 app = Flask(__name__)
 app.config["TEMPLATE_AUTO_RELOAD"] = True
@@ -14,6 +15,8 @@ Session(app)
 words_db = database(db_file, "SELECT id, eng, dai FROM data")
 accounts_db = database(db_accounts, "SELECT id, username, email, role FROM accounts")
 
+
+
 @app.route("/")
 def index():
     if session.get("role") == "admin":
@@ -21,9 +24,11 @@ def index():
     
     return render_template("index.html", data=words_db.get_all("eng"), name=session.get("username"))
 
+
 @app.route("/admin")
 def admin_panel():
     return render_template("admin.html", data=words_db.get_all("eng"), role=session.get("role"))
+
 
 @app.route("/update", methods=["GET", "POST"])
 def update():
@@ -50,9 +55,9 @@ def search():
     search_html = "search.html"
 
     if mode == "accounts":
-        return render_template(search_html, results=accounts_db.execute_query('username',q), mode=mode)
+        return render_template(search_html, results=accounts_db.search_query('username',q), mode=mode)
 
-    return render_template(search_html, results=words_db.execute_query('eng',q), mode=mode)
+    return render_template(search_html, results=words_db.search_query('eng',q), mode=mode)
 
 
 @app.route("/accounts")
@@ -64,71 +69,44 @@ def accounts():
 def login():
     html_file = "login.html"
     if request.method == "POST":
-        db = sqlite3.connect(db_accounts)
-        db_cur = db.cursor()
-        
-        db_cur.execute("SELECT * FROM accounts WHERE username = ?", (request.form.get("username"),))
-        acc_data = db_cur.fetchone()
-        if not acc_data:
-            db_cur.execute("SELECT * FROM accounts WHERE email = ?", (request.form.get("username"),))
-            acc_data = db_cur.fetchone()
-        
-        if not acc_data:
-            return render_template(html_file, message="Username or Email not found!")
-        
-        pass_hash = acc_data[3]
-        given_pass = request.form.get("password").encode("utf-8")
-        
-        if bcrypt.checkpw(given_pass, pass_hash):
-            session["username"] = acc_data[1]
-            session["role"] = acc_data[4]
-            session["email"] = acc_data[2]
+        username = request.form.get("username")
+        password = request.form.get("password")
 
-            db.close()
-            return redirect("/")
-        db.close()
-        return render_template(html_file, message="Invalid password!")
+        return_value = authenticate(session=session, user_mail=username, password=password)
+        if isinstance(return_value,str):
+            return render_template(html_file,message=return_value)
+        
+        return redirect('/')
 
     return render_template(html_file)
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     html_file = "register.html"
 
     if request.method == "POST":
-        db = sqlite3.connect(db_accounts)
-        db_cur = db.cursor()
+        username = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        conpassword = request.form.get("conpassword")
 
-        db_cur.execute("SELECT * FROM accounts WHERE username = ?", (request.form.get("username"),))
-        user_taken_test = db_cur.fetchone()
-
-        db_cur.execute("SELECT * FROM accounts WHERE email = ?", (request.form.get("email"),))
-        emaiL_taken_test = db_cur.fetchone()
-
-        if not request.form.get("username") or not request.form.get("email") or not request.form.get("password") or not request.form.get("conpassword"):
+        # Form confirmation
+        if not username or not email or not password or not conpassword:
             return render_template(html_file, message="Invalid!")
-        
-        elif user_taken_test:
-            return render_template(html_file, message="Username taken!")
-        
-        elif emaiL_taken_test:
-            return render_template(html_file, message="Email already taken!")
 
-        elif request.form.get("password") != request.form.get("conpassword"):
+        elif password != conpassword:
             return render_template(html_file, message="Password and Confirm password are not the same!")
         
-        salt = bcrypt.gensalt(rounds=12)
-        byte_pass = request.form.get("password").encode("utf-8")
-        pass_hash = bcrypt.hashpw(byte_pass, salt)
-        
-        db_cur.execute("INSERT INTO accounts (username, email, password) VALUES (?,?,?)", (request.form.get("username"), request.form.get("email"), pass_hash))
-        session["username"] = request.form.get("username")
-        session["email"] = request.form.get("email")
-        db.commit()
-        db_cur.close()
+        # Creating account
+        return_value = create_account(session,username,email,password)
+        if isinstance(return_value, str):
+            return render_template(html_file, message=return_value)
 
         return redirect("/")
+    
     return render_template(html_file)
+
 
 @app.route("/logout")
 def logout():
