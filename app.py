@@ -40,7 +40,7 @@ def update():
         db = sqlite3.connect(db_file)
         db_cur = db.cursor()
 
-        print(f'{word_id}: {eng} = {dai}')
+        # print(f'{word_id}: {eng} = {dai}')
         db_cur.execute('UPDATE data SET eng = ?, dai = ? WHERE id = ?', [eng, dai, word_id])
         db.commit()
         db_cur.close()

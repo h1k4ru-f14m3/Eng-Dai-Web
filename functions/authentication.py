@@ -17,13 +17,11 @@ def set_session(session, params, values):
 
 
 def is_dupe(check_for,input_value):
-    print(bool(db.search_query(check_for,input_value)))
     return bool(db.search_query(check_for,input_value))
 
 
 def create_account(session, username, email, password):
     if is_dupe('username',username) or is_dupe('email',email):
-        print(username)
         return "Username or Email Taken!"
     
     salt = bcrypt.gensalt(rounds=12)
@@ -32,7 +30,6 @@ def create_account(session, username, email, password):
 
     db.execute_query(query='INSERT INTO accounts (username, email, password) VALUES (?,?,?)', param=(username,email,pass_hash))
     db_results = db.search_query('username', username)
-    print(db_results)
 
     params = ['username', 'email', 'role']
     values = [db_results[0][1], db_results[0][2], db_results[0][3]]
@@ -43,7 +40,6 @@ def create_account(session, username, email, password):
 def authenticate(user_mail, password, session):
     email_regex = '^[\w\.-]+@[a-zA-Z\d-]+\.[a-zA-Z]{2,}$'
     find_for = 'username'
-    print(f'From function: {user_mail}')
     
     if re.fullmatch(email_regex,user_mail):
         find_for = 'email'
@@ -53,7 +49,6 @@ def authenticate(user_mail, password, session):
     
     db_results = db.execute_query(f'SELECT password, username, email, role FROM accounts WHERE {find_for} = ?', (user_mail,))
     pass_in_db = db_results[0][0]
-    print(pass_in_db)
     given_pass = password.encode("utf-8")
 
     if bcrypt.checkpw(given_pass, pass_in_db):
