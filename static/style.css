@@ -116,7 +116,7 @@ h2 {
     cursor:pointer;
 }
 
-.eng-input, .dai-input, .id-input {
+.modal_input {
     font-size: 1rem;
     width: 25rem;
     padding: 0.5rem;

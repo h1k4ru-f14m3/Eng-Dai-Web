@@ -16,15 +16,20 @@ You are not allowed here!
 <div class="list" id="index_list">
     {% for row in results %}
         <div class="item">
-            <h1><a data-email="{{ row[2] }}">{{ row[1] }}</a></h1>
+            <h1><a>{{ row[1] }}</a></h1>
             
-            <form method="post" action="/setrole">
-            <input hidden name="user_id" value="{{ row[0] }}">
-            {% if row[3] == 'user' %}
-                <button type="submit" name="new_role" value="admin">Set to Admin</button>
-            {% else %}
-                <button type="submit" name="new_role" value="user">Set to User</button>
-            {% endif %}
+            <form method="post" action="/set_role">
+                <input hidden name="user_id" value="{{ row[0] }}">
+                
+                <button type="submit" formaction="/del_account">Delete Account</button>
+                <!-- <button type="submit" formaction="/reset_pass">Reset Password</button> -->
+                <button class="btn_set_pass" type="button" data-id="{{ row[0] }}">Reset Password</button>
+
+                {% if row[3] == 'user' %}
+                    <button type="submit" name="new_role" value="admin">Set to Admin</button>
+                {% else %}
+                    <button type="submit" name="new_role" value="user">Set to User</button>
+                {% endif %}
             </form>
         </div>
     {% endfor %}
@@ -35,12 +40,43 @@ You are not allowed here!
     <a href="/">Back</a>
 </div>
 
+
+<div class="modal" id="set_pass">
+    <form class="popup" action="/set_pass" method="post">
+        <h1>Set Password</h1>
+
+        <label for="user_id">User-ID:</label>
+        <input class="modal_input id-input" readonly name="user_id">
+
+        <label for="password">New Password:</label>
+        <input type="password" class="modal_input password-input" name="password">
+
+        <div class="buttons">
+            <button class="button" id="submit" type="submit">Confirm</button>
+            <button class="button" id="cancel" type="button">Cancel</button>
+        </div>
+    </form>
+</div>
+
+
+
 <script type="module">
-    import { search } from "{{ url_for('static', filename='functions.js') }}";
+    import { search, addModal } from "{{ url_for('static', filename='functions.js') }}";
     
-    // For index.html
+    // For search
     let index_input = document.querySelector("#index_search");
-    search(index_input,'accounts','#index_list');
+
+    // For modals
+    let modal = '.modal';
+    let cancel = '#cancel';
+    let selectors = ['.id-input'];
+    let values = Object.values(document.querySelector('.btn_set_pass').dataset);
+    
+    // Reset_Password
+    addModal('.btn_set_pass',modal,cancel,selectors,values);
+    search(index_input,'accounts','#index_list', function() {
+        addModal('.btn_set_pass',modal,cancel,selectors,values);
+    });
 </script>
 
 {% endif %}

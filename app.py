@@ -5,6 +5,7 @@ import bcrypt
 from functions.global_vars import db_file, db_accounts
 from functions.search import database
 from functions.authentication import create_account, authenticate
+from functions.accounts import delete_account, reset_password
 
 app = Flask(__name__)
 app.config["TEMPLATE_AUTO_RELOAD"] = True
@@ -112,3 +113,23 @@ def register():
 def logout():
     session.clear()
     return redirect("/")
+
+
+@app.route("/del_account", methods=["GET", "POST"])
+def del_account():
+    html_file = "accounts.html"
+    if request.method == "POST":
+        id = request.form.get("user_id")
+        delete_account(id)
+        return redirect("/accounts")
+    return redirect("/accounts")
+
+
+@app.route("/set_pass", methods=["GET", "POST"])
+def set_pass():
+    if request.method == "POST":
+        user_id = request.form.get("user_id")
+        password = request.form.get("password")
+        reset_password(user_id,password)
+        return redirect("/accounts")
+    return redirect("/accounts")

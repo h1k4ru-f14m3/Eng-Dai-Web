@@ -31,13 +31,13 @@
         <h1>Edit Panel</h1>
 
         <label for="word_id">Word-ID:</label>
-        <input class="id-input" readonly name="word_id">
+        <input class="modal_input id-input" readonly name="word_id">
 
         <label for="eng">English:</label>
-        <input class="eng-input" name="eng">
+        <input class="modal_input eng-input" name="eng">
 
         <label for="dai">Dai:</label>
-        <input class="dai-input" name="dai">
+        <input class="modal_input dai-input" name="dai">
 
         <div class="buttons">
             <button class="button" id="submit" type="submit">Submit</button>
@@ -52,12 +52,18 @@
 </div>
 
 <script type="module">
-    import { search,addListeners } from "{{ url_for('static', filename='functions.js') }}";
+    import { search,addModal } from "{{ url_for('static', filename='functions.js') }}";
 
-    let admin_input = document.querySelector("#admin_search");
-    addListeners();
-    search(admin_input,'admin','#admin_list', function() {
-        addListeners();
+    let selectors = ['.id-input', '.eng-input', '.dai-input'];
+    let admin_search = document.querySelector("#admin_search");
+    let admin_input = document.querySelector(".admininput");
+    let modal = '.modal';
+    let cancel = '#cancel';
+    let values = Object.values(admin_input.dataset);
+    
+    addModal('.admininput', modal, cancel, selectors, values);
+    search(admin_search,'admin','#admin_list', function() {
+        addModal('.admininput', modal, cancel, selectors, values);
     });
 </script>
 {% else %}

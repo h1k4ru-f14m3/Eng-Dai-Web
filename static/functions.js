@@ -10,28 +10,26 @@ export function search(input,mode,output,external_function) {
     });
 }
 
-export function addListeners() {
-    let buttons = document.querySelectorAll('.admininput');
-    let modal = document.querySelector('.modal');
-    let cancel = document.querySelector('.buttons #cancel');
+export function addModal(button, modal_selector, cancel_selector, selectors, values) {
+    let buttons = document.querySelectorAll(button);
+    let modal = document.querySelector(modal_selector);
+    let cancel = document.querySelector(cancel_selector);
 
-    buttons.forEach(button => {
+    buttons.forEach(function (button) {
         button.addEventListener("click", function() {
             modal.style.visibility = 'visible';
-            let wordid = this.dataset.id;
-            let eng = this.dataset.eng;
-            let dai = this.dataset.dai;
-
-            document.querySelector('.id-input').value = wordid;
-            document.querySelector('.eng-input').value = eng;
-            document.querySelector('.dai-input').value = dai;
-                
-            console.log(wordid);
+            set_values(selectors, values);
         });
     });
 
     cancel.addEventListener("click", function() {
         modal.style.visibility = 'hidden';
         console.log('close!');
+    });
+}
+
+export function set_values(selectors,values) {
+    selectors.forEach(function (selector, i) {
+        document.querySelector(selector).value = values[i];
     });
 }
