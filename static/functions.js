@@ -10,7 +10,8 @@ export function search(input,mode,output,external_function) {
     });
 }
 
-export function addModal(button, modal_selector, cancel_selector, selectors, values) {
+
+export function addModal(button, modal_selector, cancel_selector, selectors) {
     let buttons = document.querySelectorAll(button);
     let modal = document.querySelector(modal_selector);
     let cancel = document.querySelector(cancel_selector);
@@ -18,6 +19,8 @@ export function addModal(button, modal_selector, cancel_selector, selectors, val
     buttons.forEach(function (button) {
         button.addEventListener("click", function() {
             modal.style.visibility = 'visible';
+            let values = Object.values(this.dataset);
+            
             set_values(selectors, values);
         });
     });
@@ -27,6 +30,7 @@ export function addModal(button, modal_selector, cancel_selector, selectors, val
         console.log('close!');
     });
 }
+
 
 export function set_values(selectors,values) {
     selectors.forEach(function (selector, i) {

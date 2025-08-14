@@ -22,7 +22,6 @@ You are not allowed here!
                 <input hidden name="user_id" value="{{ row[0] }}">
                 
                 <button type="submit" formaction="/del_account">Delete Account</button>
-                <!-- <button type="submit" formaction="/reset_pass">Reset Password</button> -->
                 <button class="btn_set_pass" type="button" data-id="{{ row[0] }}">Reset Password</button>
 
                 {% if row[3] == 'user' %}
@@ -67,15 +66,15 @@ You are not allowed here!
     let index_input = document.querySelector("#index_search");
 
     // For modals
-    let modal = '.modal';
+    let modal = '#set_pass';
     let cancel = '#cancel';
     let selectors = ['.id-input'];
     let values = Object.values(document.querySelector('.btn_set_pass').dataset);
     
     // Reset_Password
-    addModal('.btn_set_pass',modal,cancel,selectors,values);
+    addModal('.btn_set_pass',modal,cancel,selectors);
     search(index_input,'accounts','#index_list', function() {
-        addModal('.btn_set_pass',modal,cancel,selectors,values);
+        addModal('.btn_set_pass',modal,cancel,selectors);
     });
 </script>
 

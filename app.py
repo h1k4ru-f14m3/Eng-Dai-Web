@@ -5,7 +5,7 @@ import bcrypt
 from functions.global_vars import db_file, db_accounts
 from functions.search import database
 from functions.authentication import create_account, authenticate
-from functions.accounts import delete_account, reset_password
+from functions.accounts import delete_account, set_password
 
 app = Flask(__name__)
 app.config["TEMPLATE_AUTO_RELOAD"] = True

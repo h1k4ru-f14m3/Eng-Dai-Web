@@ -61,9 +61,9 @@
     let cancel = '#cancel';
     let values = Object.values(admin_input.dataset);
     
-    addModal('.admininput', modal, cancel, selectors, values);
+    addModal('.admininput', modal, cancel, selectors);
     search(admin_search,'admin','#admin_list', function() {
-        addModal('.admininput', modal, cancel, selectors, values);
+        addModal('.admininput', modal, cancel, selectors);
     });
 </script>
 {% else %}
