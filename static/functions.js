@@ -37,3 +37,37 @@ export function set_values(selectors,values) {
         document.querySelector(selector).value = values[i];
     });
 }
+
+
+export function runFlaskRoute(queryToRun, formSelector, messageSelector) {
+    const form = document.querySelector(formSelector);
+    const message = document.querySelector(messageSelector);
+
+    fetch(queryToRun, {
+        method: "POST",
+        body: new FormData(form),
+    }).then(result => result.text()).then(
+        data => {
+            if (data.trim() === "success"){
+                window.location.replace("/");
+            }
+            else {
+                message.style.visibility = 'visible';
+                message.innerHTML = data;
+            }
+        }
+    );
+}
+
+
+export function listenEnter(formSelector, buttonSelector) {
+    const form = document.querySelector(formSelector);
+    const btn = document.querySelector(buttonSelector);
+
+    form.addEventListener("keypress", function(event){
+        if (event.key === "Enter") {
+            event.preventDefault();
+            btn.click();
+        }
+    })
+}

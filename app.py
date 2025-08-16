@@ -75,9 +75,9 @@ def login():
 
         return_value = authenticate(session=session, user_mail=username, password=password)
         if isinstance(return_value,str):
-            return render_template(html_file,message=return_value)
+            return return_value
         
-        return redirect('/')
+        return "success"
 
     return render_template(html_file)
 
@@ -94,17 +94,17 @@ def register():
 
         # Form confirmation
         if not username or not email or not password or not conpassword:
-            return render_template(html_file, message="Invalid!")
+            return "Invalid!"
 
         elif password != conpassword:
-            return render_template(html_file, message="Password and Confirm password are not the same!")
+            return "Password and Confirm password are not the same!"
         
         # Creating account
         return_value = create_account(session,username,email,password)
         if isinstance(return_value, str):
-            return render_template(html_file, message=return_value)
+            return return_value
 
-        return redirect("/")
+        return "success"
     
     return render_template(html_file)
 

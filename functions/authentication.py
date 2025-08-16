@@ -17,7 +17,7 @@ def set_session(session, params, values):
 
 
 def is_dupe(check_for,input_value):
-    return bool(db.search_query(check_for,input_value))
+    return bool(db.execute_query(f'SELECT id, username, email, role FROM accounts WHERE {check_for} = ?', (input_value,)))
 
 
 def create_account(session, username, email, password):
@@ -43,11 +43,13 @@ def authenticate(user_mail, password, session):
     
     if re.fullmatch(email_regex,user_mail):
         find_for = 'email'
+    # print(is_dupe(find_for, user_mail))
 
     if not is_dupe(find_for, user_mail):
         return "Invalid credentials."
     
     db_results = db.execute_query(f'SELECT password, username, email, role FROM accounts WHERE {find_for} = ?', (user_mail,))
+
     pass_in_db = db_results[0][0]
     given_pass = password.encode("utf-8")
 

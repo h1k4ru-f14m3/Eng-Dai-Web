@@ -34,6 +34,8 @@ h2 {
 }
 
 .login-container p {
+    visibility: hidden;
+
     background-color: rgba(190,43,43,0.75);
     padding: 0.2em;
     color: black;
