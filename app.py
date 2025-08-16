@@ -69,6 +69,9 @@ def accounts():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     html_file = "login.html"
+    if session.get('username'):
+            return redirect("/")
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -85,6 +88,8 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     html_file = "register.html"
+    if session.get('username'):
+            return redirect("/")
 
     if request.method == "POST":
         username = request.form.get("username")
