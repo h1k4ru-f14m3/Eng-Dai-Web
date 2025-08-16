@@ -58,6 +58,6 @@ def authenticate(user_mail, password, session):
         values = [db_results[0][1], db_results[0][2], db_results[0][3]]
         set_session(session,params,values)
 
-        return True
+        return "success"
     else:
-        return False
+        return "Invalid credentials."
