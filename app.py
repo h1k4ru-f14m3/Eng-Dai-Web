@@ -2,10 +2,11 @@ from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 import sqlite3
 import bcrypt
-from functions.global_vars import db_file, db_accounts
+from functions.global_vars import db_file, db_accounts, reset_session
 from functions.search import database
 from functions.authentication import create_account, authenticate
 from functions.accounts import delete_account, set_password
+from functions.roles import check_role, set_role
 
 app = Flask(__name__)
 app.config["TEMPLATE_AUTO_RELOAD"] = True
@@ -20,6 +21,8 @@ accounts_db = database(db_accounts, "SELECT id, username, email, role FROM accou
 
 @app.route("/")
 def index():
+    # print(reset_session)
+    check_role(session.get('id'), session, 'role')
     if session.get("role") == "admin":
         return redirect("/admin")
     
@@ -28,7 +31,10 @@ def index():
 
 @app.route("/admin")
 def admin_panel():
-    return render_template("admin.html", data=words_db.get_all("eng"), role=session.get("role"))
+    check_role(session.get('id'), session, 'role')
+    if session.get('role') != 'admin':
+        return redirect('/')
+    return render_template("admin.html", data=words_db.get_all("eng"), role=session.get("role"), name=session.get('username'))
 
 
 @app.route("/update", methods=["GET", "POST"])
@@ -63,6 +69,7 @@ def search():
 
 @app.route("/accounts")
 def accounts():
+    check_role(session.get('id'), session, 'role')
     return render_template("accounts.html", role=session.get("role"), results=accounts_db.get_all('username'))
 
 
@@ -135,6 +142,15 @@ def set_pass():
     if request.method == "POST":
         user_id = request.form.get("user_id")
         password = request.form.get("password")
-        reset_password(user_id,password)
+        set_password(user_id,password)
         return redirect("/accounts")
     return redirect("/accounts")
+
+
+@app.route("/set_role", methods=["GET", "POST"])
+def setrole():
+    user_id = request.form.get('user_id')
+    new_role = request.form.get('new_role')
+
+    set_role(user_id,new_role)
+    return redirect('/accounts')

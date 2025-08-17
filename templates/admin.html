@@ -5,7 +5,9 @@
 {% block main %}
 {% if role == "admin" %}
 <h1 style="text-align: center;">English to Dai</h1>
-
+{% if name %}
+    <p style="margin-top: -2em">Logged in as: {{ name }}</p>
+{% endif %}
 <form action="/update" method="post">
     <div class="navBar">
         <input type="text" name="q" autofocus autocomplete=off placeholder="Search" class="searchbar" id="admin_search">

@@ -17,7 +17,7 @@ def set_session(session, params, values):
 
 
 def is_dupe(check_for,input_value):
-    return bool(db.execute_query(f'SELECT id, username, email, role FROM accounts WHERE {check_for} = ?', (input_value,)))
+    return bool(db.execute_query(f'SELECT username, email, role FROM accounts WHERE {check_for} = ?', (input_value,)))
 
 
 def create_account(session, username, email, password):
@@ -31,8 +31,8 @@ def create_account(session, username, email, password):
     db.execute_query(query='INSERT INTO accounts (username, email, password) VALUES (?,?,?)', param=(username,email,pass_hash))
     db_results = db.search_query('username', username)
 
-    params = ['username', 'email', 'role']
-    values = [db_results[0][1], db_results[0][2], db_results[0][3]]
+    params = ['id', 'username', 'email', 'role']
+    values = [db_results[0][0], db_results[0][1], db_results[0][2], db_results[0][3]]
 
     return [set_session(session,params,values)]
 
@@ -48,14 +48,14 @@ def authenticate(user_mail, password, session):
     if not is_dupe(find_for, user_mail):
         return "Invalid credentials."
     
-    db_results = db.execute_query(f'SELECT password, username, email, role FROM accounts WHERE {find_for} = ?', (user_mail,))
+    db_results = db.execute_query(f'SELECT id, username, email, role, password FROM accounts WHERE {find_for} = ?', (user_mail,))
 
-    pass_in_db = db_results[0][0]
+    pass_in_db = db_results[0][4]
     given_pass = password.encode("utf-8")
 
     if bcrypt.checkpw(given_pass, pass_in_db):
-        params = ['username', 'email', 'role']
-        values = [db_results[0][1], db_results[0][2], db_results[0][3]]
+        params = ['id', 'username', 'email', 'role']
+        values = [db_results[0][0], db_results[0][1], db_results[0][2], db_results[0][3]]
         set_session(session,params,values)
 
         return "success"
