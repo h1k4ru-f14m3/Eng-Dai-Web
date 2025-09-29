@@ -12,7 +12,7 @@
     <div class="navBar">
         <input type="text" name="q" autofocus autocomplete=off placeholder="Search" class="searchbar" id="admin_search">
         <button type="button" class="button">Apply Changes</button>
-        <button type="button" class="button">Add</button>
+        <button type="button" class="button" id="add-btn" data-id="-" data-eng=" " data-dai=" ">Add</button>
     </div>
     <div class="admin list" id="admin_list">
     {% for row in data %}
@@ -59,6 +59,7 @@
     let selectors = ['.id-input', '.eng-input', '.dai-input'];
     let admin_search = document.querySelector("#admin_search");
     let admin_input = document.querySelector(".admininput");
+    let add_btn = document.querySelector("#add-btn");
     let modal = '.modal';
     let cancel = '#cancel';
     let values = Object.values(admin_input.dataset);
@@ -67,6 +68,8 @@
     search(admin_search,'admin','#admin_list', function() {
         addModal('.admininput', modal, cancel, selectors);
     });
+
+    addModal('#add-btn', modal, cancel, selectors, "Add a New Word");
 </script>
 {% else %}
 You are not allowed here!

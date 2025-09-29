@@ -29,7 +29,7 @@ def create_account(session, username, email, password):
     pass_hash = bcrypt.hashpw(byte_pass, salt)
 
     db.execute_query(query='INSERT INTO accounts (username, email, password) VALUES (?,?,?)', param=(username,email,pass_hash))
-    db_results = db.search_query('username', username)
+    db_results = db.search_query('username', username, order_by='id')
 
     params = ['id', 'username', 'email', 'role']
     values = [db_results[0][0], db_results[0][1], db_results[0][2], db_results[0][3]]

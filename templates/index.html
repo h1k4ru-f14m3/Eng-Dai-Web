@@ -15,10 +15,11 @@
 <div class="list" id="index_list">
     {% for row in data %}
     <div class="item">
-        <h1>{{ row[1] }}</h2>
+        <h2>{{ row[1] }}</h2>
         <p>{{ row[2] }}</p>
     </div>
     {% endfor %}
+    <p id="sentinel">Loading...</p>
 </div>
 <p id="credits">made by <a href="https://github.com/h1k4ru-f14m3" target="_blank">h1k4ru-f14m3</a></p>
 
@@ -32,11 +33,15 @@
 </div>
 
 <script type="module">
-    import { search } from "{{ url_for('static', filename='functions.js') }}";
+    import { init_search, init_observer } from "{{ url_for('static', filename='functions.js') }}";
     
     // For index.html
     let index_input = document.querySelector("#index_search");
-    search(index_input,'normal','#index_list');
+    let sentinel = document.querySelector('#sentinel');
+
+    init_search(index_input,'normal','#index_list',sentinel);
+    init_observer(index_input,'normal','#index_list',sentinel);
+
 </script>
 
 {% endblock %}

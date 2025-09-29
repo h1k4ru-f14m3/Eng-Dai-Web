@@ -2,7 +2,7 @@ from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 import sqlite3
 import bcrypt
-from functions.global_vars import db_file, db_accounts, reset_session
+from functions.global_vars import db_file, db_accounts, reset_session, offset_gap
 from functions.search import database
 from functions.authentication import create_account, authenticate
 from functions.accounts import delete_account, set_password
@@ -26,7 +26,7 @@ def index():
     if session.get("role") == "admin":
         return redirect("/admin")
     
-    return render_template("index.html", data=words_db.get_all("eng"), name=session.get("username"))
+    return render_template("index.html", data=words_db.search_query('eng','',limit_count=offset_gap), name=session.get("username"))
 
 
 @app.route("/admin")
@@ -40,15 +40,18 @@ def admin_panel():
 @app.route("/update", methods=["GET", "POST"])
 def update():
     if request.method == "POST":
-        word_id = request.form.get('word_id')
-        eng = request.form.get('eng')
-        dai = request.form.get('dai')
+        word_id = request.form.get('word_id').strip()
+        eng = request.form.get('eng').strip()
+        dai = request.form.get('dai').strip()
 
         db = sqlite3.connect(db_file)
         db_cur = db.cursor()
 
         # print(f'{word_id}: {eng} = {dai}')
-        db_cur.execute('UPDATE data SET eng = ?, dai = ? WHERE id = ?', [eng, dai, word_id])
+        if word_id == '-':
+            db_cur.execute('INSERT INTO data (eng, dai) VALUES (?, ?)', [eng, dai])
+        else:
+            db_cur.execute('UPDATE data SET eng = ?, dai = ? WHERE id = ?', [eng, dai, word_id])
         db.commit()
         db_cur.close()
 
@@ -59,12 +62,13 @@ def update():
 def search():
     q = request.args.get("q")
     mode = request.args.get("m")
+    offset = int(request.args.get("offset"))
     search_html = "search.html"
 
     if mode == "accounts":
-        return render_template(search_html, results=accounts_db.search_query('username',q), mode=mode)
+        return render_template(search_html, results=accounts_db.search_query('username',q,limit_count=offset_gap), mode=mode,limit_count=offset_gap,offset=offset)
 
-    return render_template(search_html, results=words_db.search_query('eng',q), mode=mode)
+    return render_template(search_html, results=words_db.search_query('eng',param=q,limit_count=offset_gap,offset=offset), mode=mode)
 
 
 @app.route("/accounts")

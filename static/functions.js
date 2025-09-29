@@ -1,17 +1,30 @@
-export function search(input,mode,output,external_function) {
-    input.addEventListener('input', async function() {
-        let response = await fetch('/search?m=' + mode + '&q=' + input.value);
-        let results = await response.text();
-        
-        document.querySelector(output).innerHTML = results;
-        document.querySelector(output).scrollTo = 0;
+let offset_gap = 25;
 
-        external_function();
-    });
+export async function search(query) {
+    let response = await fetch(query);
+    let results = await response.text();
+
+    return results;
 }
 
 
-export function addModal(button, modal_selector, cancel_selector, selectors) {
+export function init_search(input, mode, output, sentinel) {
+    input.addEventListener('input', async function () {
+        let search_query = make_query(input.value,mode);
+        let result = await search(search_query);
+
+        document.querySelector(output).innerHTML = result;
+        document.querySelector(output).appendChild(sentinel);
+        document.querySelector(output).scrollTop = 0;
+    })
+}
+
+
+export function make_query(input, mode, offset=0) {
+    return '/search?m=' + mode + '&offset=' + offset + '&q=' + input;
+}
+
+export function addModal(button, modal_selector, cancel_selector, selectors, header="Edit Panel") {
     let buttons = document.querySelectorAll(button);
     let modal = document.querySelector(modal_selector);
     let cancel = document.querySelector(cancel_selector);
@@ -20,6 +33,7 @@ export function addModal(button, modal_selector, cancel_selector, selectors) {
         button.addEventListener("click", function() {
             modal.style.visibility = 'visible';
             let values = Object.values(this.dataset);
+            modal.querySelector('h1').innerHTML = header;
             
             set_values(selectors, values);
         });
@@ -70,4 +84,32 @@ export function listenEnter(formSelector, buttonSelector) {
             btn.click();
         }
     })
+}
+
+
+export function init_observer (input,mode,output,sentinel) {
+    let offset_amt = 0;
+    let current_query = '';
+
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(async entry => {
+            if (entry.isIntersecting) {
+                let query = input.value;
+                if (query !== current_query) {
+                    offset_amt = 0;
+                    current_query = query;
+                }
+
+                offset_amt += 25;
+                console.log(make_query(query,mode,offset_amt));
+                let result = await search(make_query(query,mode,offset_amt));
+                sentinel.insertAdjacentHTML('beforebegin', result);
+            }
+        });
+    }, {
+        rootMargin: '100px'
+    });
+
+    observer.observe(sentinel);
 }
