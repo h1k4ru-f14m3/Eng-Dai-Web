@@ -68,7 +68,11 @@ def search():
     if mode == "accounts":
         return render_template(search_html, results=accounts_db.search_query('username',q,limit_count=offset_gap), mode=mode,limit_count=offset_gap,offset=offset)
 
-    return render_template(search_html, results=words_db.search_query('eng',param=q,limit_count=offset_gap,offset=offset), mode=mode)
+    response = words_db.search_query('eng',param=q,limit_count=offset_gap,offset=offset)
+    loading = offset <= len(response)
+    print(loading)
+
+    return render_template(search_html, results=response, mode=mode, load_status=loading)
 
 
 @app.route("/accounts")

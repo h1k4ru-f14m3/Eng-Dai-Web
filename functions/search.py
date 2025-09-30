@@ -22,22 +22,19 @@ class database():
             return db_cur.rowcount
 
     def search_query(self, search_for, param, normal=True, order_by='ENG', limit_count=0, offset=0):
-        print(limit_count)
-        print(offset)
-        print(type(offset))
-
         if param == '':
             return self.get_all(search_for, limit_count=limit_count, offset=offset)
 
         db_cur = sqlite3.connect(self.db).cursor()
-        modified_q = self.def_query + " " + f"WHERE {search_for} LIKE ?" + " " + f"ORDER BY {order_by} ASC"
+        modified_q = self.def_query + " " + f"WHERE {search_for} LIKE ? ORDER BY {order_by} ASC LIMIT {limit_count}"
         if normal:
             param = f'{param}%'
 
         if int(offset) > 0:
-            print("OK!")
-            modified_q = modified_q + f" LIMIT {limit_count} OFFSET {offset}"
-        
+            modified_q = modified_q + f" OFFSET {offset}"
+
+        print(f"{modified_q}, ({param})")
+
         db_cur.execute(modified_q, (param,))
         return db_cur.fetchall()
     
@@ -52,6 +49,8 @@ class database():
         modified_q = f'{self.def_query} {order_syntax} LIMIT {limit_count}'
         if offset > 0:
             modified_q = modified_q + f' OFFSET {offset}'
+
+        print(modified_q)
 
         db_cur.execute(modified_q)
         return db_cur.fetchall()
